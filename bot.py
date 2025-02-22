@@ -9,7 +9,7 @@ async def start(update: Update, context: CallbackContext) -> None:
 # Обработка фразы "орёл или решка"
 async def flip_on_message(update: Update, context: CallbackContext) -> None:
     if "орёл или решка" in update.message.text.lower():
-        result = random.choice(["+1", "+10", "-10", "-1"])
+        result = random.choice(["+10", "-10"])
         await update.message.reply_text(f"Результат: {result}")
 
 # Команда /reset
