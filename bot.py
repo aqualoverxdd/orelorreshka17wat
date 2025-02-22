@@ -9,7 +9,7 @@ async def start(update: Update, context: CallbackContext) -> None:
 # Обработка фразы "орёл или решка"
 async def flip_on_message(update: Update, context: CallbackContext) -> None:
     if "орёл или решка" in update.message.text.lower():
-        result = random.choice(["+10", "-10"])
+        result = random.choice(["+1", "+10", "-10", "-1"])
         await update.message.reply_text(f"Результат: {result}")
 
 # Команда /reset
@@ -21,7 +21,7 @@ def main() -> None:
     token = "7598790657:AAHZg02aPDKJN3waFGnek0SLhsEnEKNGMPc"
     
     # Создаем приложение
-    application = Application.builder().token(token).build()
+    application = Application.builder().token(token).build()  # Обратите внимание на строчную букву
 
     # Регистрация команд
     application.add_handler(CommandHandler("start", start))
@@ -32,13 +32,7 @@ def main() -> None:
 
     # Запуск бота
     print("Бот запущен...")
-    application.run_polling()
-
-if __name__ == '__main__':
-    main()
-    # Запуск бота
-    print("Бот запущен...")
-    application.run_polling()
+    application.run_polling()  # Используем application, а не Application
 
 if __name__ == '__main__':
     main()
