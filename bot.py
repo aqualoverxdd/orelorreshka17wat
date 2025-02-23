@@ -1,7 +1,6 @@
 import random
-import threading
 import asyncio
-from flask import Flask
+from flask import Flask, request
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
 
@@ -27,7 +26,7 @@ async def reset(update: Update, context: CallbackContext) -> None:
     await update.message.reply_text("Бот сброшен. Напиши 'орёл или решка', чтобы начать заново.")
 
 # Функция для запуска бота
-def run_bot():
+async def run_bot():
     # Вставьте сюда ваш токен
     token = "7598790657:AAHZg02aPDKJN3waFGnek0SLhsEnEKNGMPc"
     
@@ -43,17 +42,23 @@ def run_bot():
 
     # Запуск бота
     print("Бот запущен...")
-    
-    # Создаем новый цикл событий для асинхронного кода
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    
-    # Запускаем бота в цикле событий
-    loop.run_until_complete(application.run_polling())
+    await application.run_polling()
+
+# Запуск Flask и бота в одном цикле событий
+async def run_app():
+    # Запуск Flask в отдельном потоке
+    from waitress import serve
+    import threading
+
+    def start_flask():
+        serve(app, host='0.0.0.0', port=10000)
+
+    flask_thread = threading.Thread(target=start_flask)
+    flask_thread.start()
+
+    # Запуск бота
+    await run_bot()
 
 if __name__ == '__main__':
-    # Запуск бота в отдельном потоке
-    threading.Thread(target=run_bot).start()
-    
-    # Запуск Flask на порту 10000
-    app.run(host='0.0.0.0', port=10000)
+    # Запуск приложения
+    asyncio.run(run_app())
