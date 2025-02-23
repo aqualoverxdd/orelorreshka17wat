@@ -1,5 +1,6 @@
 import random
 import threading
+import asyncio
 from flask import Flask
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
@@ -18,7 +19,7 @@ async def start(update: Update, context: CallbackContext) -> None:
 # Обработка фразы "орёл или решка"
 async def flip_on_message(update: Update, context: CallbackContext) -> None:
     if "орёл или решка" in update.message.text.lower():
-        result = random.choice(["+10", "-10"])
+        result = random.choice(["+1", "+10", "-10", "-1"])
         await update.message.reply_text(f"Результат: {result}")
 
 # Команда /reset
@@ -42,7 +43,13 @@ def run_bot():
 
     # Запуск бота
     print("Бот запущен...")
-    application.run_polling()
+    
+    # Создаем новый цикл событий для асинхронного кода
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    
+    # Запускаем бота в цикле событий
+    loop.run_until_complete(application.run_polling())
 
 if __name__ == '__main__':
     # Запуск бота в отдельном потоке
