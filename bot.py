@@ -1,8 +1,15 @@
+import random
 import threading
 from flask import Flask
-import random
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
+
+# Создаем Flask-приложение
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Telegram Bot is running!"
 
 # Команда /start
 async def start(update: Update, context: CallbackContext) -> None:
@@ -18,12 +25,13 @@ async def flip_on_message(update: Update, context: CallbackContext) -> None:
 async def reset(update: Update, context: CallbackContext) -> None:
     await update.message.reply_text("Бот сброшен. Напиши 'орёл или решка', чтобы начать заново.")
 
-def main() -> None:
+# Функция для запуска бота
+def run_bot():
     # Вставьте сюда ваш токен
     token = "7598790657:AAHZg02aPDKJN3waFGnek0SLhsEnEKNGMPc"
     
     # Создаем приложение
-    application = Application.builder().token(token).build()  # Обратите внимание на строчную букву
+    application = Application.builder().token(token).build()
 
     # Регистрация команд
     application.add_handler(CommandHandler("start", start))
@@ -34,28 +42,11 @@ def main() -> None:
 
     # Запуск бота
     print("Бот запущен...")
-    application.run_polling()  # Используем application, а не Application
-
-
-app = Flask(__name__)
-
-@app.route('/')
-def home():
-    return "Bot is running!"
+    application.run_polling()
 
 if __name__ == '__main__':
+    # Запуск бота в отдельном потоке
+    threading.Thread(target=run_bot).start()
+    
     # Запуск Flask на порту 10000
     app.run(host='0.0.0.0', port=10000)
-
-app = Flask(__name__)
-
-@app.route('/')
-def home():
-    return "Bot is running!"
-
-if __name__ == '__main__':
-    # Запуск Flask на порту 10000
-    app.run(host='0.0.0.0', port=10000)
-
-if __name__ == '__main__':
-    main()
