@@ -1,3 +1,5 @@
+import threading
+from flask import Flask
 import random
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
@@ -33,6 +35,27 @@ def main() -> None:
     # Запуск бота
     print("Бот запущен...")
     application.run_polling()  # Используем application, а не Application
+
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Bot is running!"
+
+if __name__ == '__main__':
+    # Запуск Flask на порту 10000
+    app.run(host='0.0.0.0', port=10000)
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Bot is running!"
+
+if __name__ == '__main__':
+    # Запуск Flask на порту 10000
+    app.run(host='0.0.0.0', port=10000)
 
 if __name__ == '__main__':
     main()
